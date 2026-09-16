@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AsistenciaRouteImport } from './routes/asistencia'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as SaludRouteImport } from './routes/salud'
 import { Route as SigeRouteImport } from './routes/sige'
 import { Route as EstudiantesIndexRouteImport } from './routes/estudiantes.index'
@@ -24,6 +25,11 @@ const IndexRoute = IndexRouteImport.update({
 const AsistenciaRoute = AsistenciaRouteImport.update({
   id: '/asistencia',
   path: '/asistencia',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SaludRoute = SaludRouteImport.update({
@@ -50,6 +56,7 @@ const EstudiantesIdRoute = EstudiantesIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/asistencia': typeof AsistenciaRoute
+  '/auth': typeof AuthRoute
   '/salud': typeof SaludRoute
   '/sige': typeof SigeRoute
   '/estudiantes/$id': typeof EstudiantesIdRoute
@@ -58,6 +65,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/asistencia': typeof AsistenciaRoute
+  '/auth': typeof AuthRoute
   '/salud': typeof SaludRoute
   '/sige': typeof SigeRoute
   '/estudiantes/$id': typeof EstudiantesIdRoute
@@ -67,6 +75,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/asistencia': typeof AsistenciaRoute
+  '/auth': typeof AuthRoute
   '/salud': typeof SaludRoute
   '/sige': typeof SigeRoute
   '/estudiantes/$id': typeof EstudiantesIdRoute
@@ -77,6 +86,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/asistencia'
+    | '/auth'
     | '/salud'
     | '/sige'
     | '/estudiantes/$id'
@@ -85,6 +95,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/asistencia'
+    | '/auth'
     | '/salud'
     | '/sige'
     | '/estudiantes/$id'
@@ -93,6 +104,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/asistencia'
+    | '/auth'
     | '/salud'
     | '/sige'
     | '/estudiantes/$id'
@@ -102,6 +114,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AsistenciaRoute: typeof AsistenciaRoute
+  AuthRoute: typeof AuthRoute
   SaludRoute: typeof SaludRoute
   SigeRoute: typeof SigeRoute
   EstudiantesIdRoute: typeof EstudiantesIdRoute
@@ -122,6 +135,13 @@ declare module '@tanstack/react-router' {
       path: '/asistencia'
       fullPath: '/asistencia'
       preLoaderRoute: typeof AsistenciaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/salud': {
@@ -158,6 +178,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AsistenciaRoute: AsistenciaRoute,
+  AuthRoute: AuthRoute,
   SaludRoute: SaludRoute,
   SigeRoute: SigeRoute,
   EstudiantesIdRoute: EstudiantesIdRoute,
