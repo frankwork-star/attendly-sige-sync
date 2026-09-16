@@ -3,19 +3,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Lock, Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { ROLES, ROLE_LABEL, fullName } from "@/lib/school";
+import { ROLE_LABEL, fullName } from "@/lib/school";
 import { useRole } from "@/lib/role";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { HealthPanel, ProtectedDataBadge } from "@/components/HealthPanel";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 export const Route = createFileRoute("/salud")({
   head: () => ({
