@@ -63,25 +63,39 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          is_sample: boolean
           level: string
           name: string
           teacher_name: string | null
+          teacher_profile_id: string | null
         }
         Insert: {
           created_at?: string
           id?: string
+          is_sample?: boolean
           level: string
           name: string
           teacher_name?: string | null
+          teacher_profile_id?: string | null
         }
         Update: {
           created_at?: string
           id?: string
+          is_sample?: boolean
           level?: string
           name?: string
           teacher_name?: string | null
+          teacher_profile_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "courses_teacher_profile_id_fkey"
+            columns: ["teacher_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       emergency_contacts: {
         Row: {
@@ -267,6 +281,27 @@ export type Database = {
           },
         ]
       }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
       student_movements: {
         Row: {
           created_at: string
@@ -321,6 +356,7 @@ export type Database = {
           enrollment_number: string | null
           guardian_interview: string | null
           id: string
+          is_sample: boolean
           level: string
           list_number: number | null
           nee_full_support: boolean
@@ -343,6 +379,7 @@ export type Database = {
           enrollment_number?: string | null
           guardian_interview?: string | null
           id?: string
+          is_sample?: boolean
           level?: string
           list_number?: number | null
           nee_full_support?: boolean
@@ -365,6 +402,7 @@ export type Database = {
           enrollment_number?: string | null
           guardian_interview?: string | null
           id?: string
+          is_sample?: boolean
           level?: string
           list_number?: number | null
           nee_full_support?: boolean
@@ -385,15 +423,42 @@ export type Database = {
           },
         ]
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "encargado" | "educadora" | "apoderado"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -520,6 +585,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["encargado", "educadora", "apoderado"],
+    },
   },
 } as const

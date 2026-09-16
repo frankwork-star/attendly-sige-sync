@@ -10,9 +10,12 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AsistenciaRouteImport } from './routes/asistencia'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as SaludRouteImport } from './routes/salud'
 import { Route as SigeRouteImport } from './routes/sige'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as EstudiantesIndexRouteImport } from './routes/estudiantes.index'
 import { Route as EstudiantesIdRouteImport } from './routes/estudiantes.$id'
 
@@ -21,9 +24,18 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AsistenciaRoute = AsistenciaRouteImport.update({
   id: '/asistencia',
   path: '/asistencia',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SaludRoute = SaludRouteImport.update({
@@ -35,6 +47,11 @@ const SigeRoute = SigeRouteImport.update({
   id: '/sige',
   path: '/sige',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const EstudiantesIndexRoute = EstudiantesIndexRouteImport.update({
   id: '/estudiantes/',
@@ -50,25 +67,32 @@ const EstudiantesIdRoute = EstudiantesIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/asistencia': typeof AsistenciaRoute
+  '/auth': typeof AuthRoute
   '/salud': typeof SaludRoute
   '/sige': typeof SigeRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/estudiantes/$id': typeof EstudiantesIdRoute
   '/estudiantes/': typeof EstudiantesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/asistencia': typeof AsistenciaRoute
+  '/auth': typeof AuthRoute
   '/salud': typeof SaludRoute
   '/sige': typeof SigeRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/estudiantes/$id': typeof EstudiantesIdRoute
   '/estudiantes': typeof EstudiantesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/asistencia': typeof AsistenciaRoute
+  '/auth': typeof AuthRoute
   '/salud': typeof SaludRoute
   '/sige': typeof SigeRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/estudiantes/$id': typeof EstudiantesIdRoute
   '/estudiantes/': typeof EstudiantesIndexRoute
 }
@@ -77,31 +101,40 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/asistencia'
+    | '/auth'
     | '/salud'
     | '/sige'
+    | '/admin'
     | '/estudiantes/$id'
     | '/estudiantes/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/asistencia'
+    | '/auth'
     | '/salud'
     | '/sige'
+    | '/admin'
     | '/estudiantes/$id'
     | '/estudiantes'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/asistencia'
+    | '/auth'
     | '/salud'
     | '/sige'
+    | '/_authenticated/admin'
     | '/estudiantes/$id'
     | '/estudiantes/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AsistenciaRoute: typeof AsistenciaRoute
+  AuthRoute: typeof AuthRoute
   SaludRoute: typeof SaludRoute
   SigeRoute: typeof SigeRoute
   EstudiantesIdRoute: typeof EstudiantesIdRoute
@@ -117,11 +150,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/asistencia': {
       id: '/asistencia'
       path: '/asistencia'
       fullPath: '/asistencia'
       preLoaderRoute: typeof AsistenciaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/salud': {
@@ -137,6 +184,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/sige'
       preLoaderRoute: typeof SigeRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/estudiantes/': {
       id: '/estudiantes/'
@@ -155,9 +209,22 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AsistenciaRoute: AsistenciaRoute,
+  AuthRoute: AuthRoute,
   SaludRoute: SaludRoute,
   SigeRoute: SigeRoute,
   EstudiantesIdRoute: EstudiantesIdRoute,
