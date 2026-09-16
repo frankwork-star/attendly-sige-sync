@@ -37,7 +37,7 @@ export const Route = createFileRoute("/salud")({
 });
 
 function HealthPage() {
-  const { role, setRole } = useRole();
+  const { role, session } = useRole();
   const [q, setQ] = useState("");
   const [selected, setSelected] = useState<string | null>(null);
 
@@ -77,20 +77,11 @@ function HealthPage() {
         </div>
         <div className="flex flex-col items-end gap-2">
           <ProtectedDataBadge />
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">Perfil activo:</span>
-            <Select value={role} onValueChange={(v) => setRole(v as typeof role)}>
-              <SelectTrigger className="w-60">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {ROLES.map((r) => (
-                  <SelectItem key={r} value={r}>
-                    {ROLE_LABEL[r]}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span>Perfil activo:</span>
+            <span className="rounded-md bg-muted px-2 py-1 font-medium text-foreground">
+              {session ? ROLE_LABEL[role] : "Visitante sin ingresar"}
+            </span>
           </div>
         </div>
       </div>
