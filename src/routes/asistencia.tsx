@@ -198,6 +198,14 @@ function AttendancePage() {
         </p>
       </div>
 
+      {restricted && (
+        <div className="rounded-xl border border-border bg-muted/50 p-4 text-sm text-muted-foreground">
+          {visibleCourses.length === 0
+            ? "Aún no tienes cursos asignados. Pide al Encargado que te asigne uno."
+            : "Ves únicamente los cursos que tienes asignados."}
+        </div>
+      )}
+
       <div className="flex flex-wrap items-end gap-3">
         <div>
           <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
