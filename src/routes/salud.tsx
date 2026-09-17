@@ -32,6 +32,7 @@ export const Route = createFileRoute("/salud")({
 
 function HealthPage() {
   const { role, session } = useRole();
+  const { ids: allowedCourseIds } = useAllowedCourseIds();
   const [q, setQ] = useState("");
   const [selected, setSelected] = useState<string | null>(null);
 
@@ -56,9 +57,13 @@ function HealthPage() {
     },
   });
 
-  const visible = (students.data ?? []).filter((s) =>
-    fullName(s).toLowerCase().includes(q.toLowerCase()),
+  const inScope = (students.data ?? []).filter(
+    (s) =>
+      role === "apoderado" ||
+      allowedCourseIds === null ||
+      (s.course_id ? allowedCourseIds.includes(s.course_id) : false),
   );
+  const visible = inScope.filter((s) => fullName(s).toLowerCase().includes(q.toLowerCase()));
   const list = role === "apoderado" ? visible.slice(0, 1) : visible;
   const current = list.find((s) => s.id === selected) ?? list[0];
 
