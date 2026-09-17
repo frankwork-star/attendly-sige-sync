@@ -12,6 +12,7 @@ import {
   toIsoDate,
   type AttendanceStatus,
 } from "@/lib/school";
+import { useAllowedCourseIds } from "@/lib/scope";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -207,7 +208,7 @@ function AttendancePage() {
               <SelectValue placeholder="Selecciona un curso" />
             </SelectTrigger>
             <SelectContent>
-              {(courses.data ?? []).map((c) => (
+              {visibleCourses.map((c) => (
                 <SelectItem key={c.id} value={c.id}>
                   {c.name} · {c.level}
                 </SelectItem>
