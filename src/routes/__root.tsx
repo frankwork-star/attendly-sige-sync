@@ -151,51 +151,89 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <RoleProvider>
-        <div className="min-h-screen bg-background">
-          <header className="sticky top-0 z-40 border-b border-sidebar-border bg-sidebar text-sidebar-foreground">
-            <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 md:flex-row md:items-center md:justify-between">
-              <Link to="/" className="flex items-center gap-3">
-                <span className="grid size-10 place-items-center rounded-xl bg-sidebar-primary text-sidebar-primary-foreground font-display text-lg font-bold">
-                  P
-                </span>
-                <span>
-                  <span className="block font-display text-lg font-semibold leading-tight">
-                    Escuela Paihuen
-                  </span>
-                  <span className="block text-xs text-sidebar-foreground/70">
-                    Matrícula · Salud · Asistencia SIGE
-                  </span>
-                </span>
-              </Link>
-              <nav className="flex flex-wrap gap-1">
-                {NAV.map(({ to, label, icon: Icon }) => (
-                  <Link
-                    key={to}
-                    to={to}
-                    activeOptions={{ exact: to === "/" }}
-                    className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                    activeProps={{
-                      className:
-                        "inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold bg-sidebar-accent text-sidebar-primary",
-                    }}
-                  >
-                    <Icon className="size-4" />
-                    {label}
-                  </Link>
-                ))}
-              </nav>
-            </div>
-          </header>
-          <main className="mx-auto max-w-7xl px-4 py-8">
-            <Outlet />
-          </main>
-          <footer className="border-t border-border py-6 text-center text-xs text-muted-foreground">
-            Datos sensibles protegidos conforme a la Ley N.º 21.719 sobre protección de datos
-            personales.
-          </footer>
-        </div>
+        <AppShell />
         <Toaster />
       </RoleProvider>
     </QueryClientProvider>
+  );
+}
+
+function AppShell() {
+  const { session, profile, role, isAdmin, signOut } = useRole();
+  const router = useRouter();
+
+  const nav = isAdmin ? [...NAV, { to: "/admin", label: "Administración", icon: Settings }] : NAV;
+
+  async function handleSignOut() {
+    await signOut();
+    void router.navigate({ to: "/auth", replace: true });
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      <header className="sticky top-0 z-40 border-b border-sidebar-border bg-sidebar text-sidebar-foreground">
+        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 md:flex-row md:items-center md:justify-between">
+          <Link to="/" className="flex items-center gap-3">
+            <span className="grid size-10 place-items-center rounded-xl bg-sidebar-primary text-sidebar-primary-foreground font-display text-lg font-bold">
+              P
+            </span>
+            <span>
+              <span className="block font-display text-lg font-semibold leading-tight">
+                Escuela Paihuen
+              </span>
+              <span className="block text-xs text-sidebar-foreground/70">
+                Matrícula · Salud · Asistencia SIGE
+              </span>
+            </span>
+          </Link>
+          <div className="flex flex-wrap items-center gap-2">
+            <nav className="flex flex-wrap gap-1">
+              {nav.map(({ to, label, icon: Icon }) => (
+                <Link
+                  key={to}
+                  to={to}
+                  activeOptions={{ exact: to === "/" }}
+                  className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                  activeProps={{
+                    className:
+                      "inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold bg-sidebar-accent text-sidebar-primary",
+                  }}
+                >
+                  <Icon className="size-4" />
+                  {label}
+                </Link>
+              ))}
+            </nav>
+            {session ? (
+              <div className="flex items-center gap-2 border-l border-sidebar-border pl-2">
+                <span className="hidden text-right text-xs leading-tight sm:block">
+                  <span className="block font-medium">
+                    {profile?.full_name?.trim() || profile?.email || "Cuenta"}
+                  </span>
+                  <span className="block text-sidebar-foreground/70">{ROLE_LABEL[role]}</span>
+                </span>
+                <Button variant="secondary" size="sm" onClick={handleSignOut}>
+                  <LogOut className="size-4" />
+                  Salir
+                </Button>
+              </div>
+            ) : (
+              <Link to="/auth" className="ml-1">
+                <Button variant="secondary" size="sm">
+                  <LogIn className="size-4" />
+                  Ingresar
+                </Button>
+              </Link>
+            )}
+          </div>
+        </div>
+      </header>
+      <main className="mx-auto max-w-7xl px-4 py-8">
+        <Outlet />
+      </main>
+      <footer className="border-t border-border py-6 text-center text-xs text-muted-foreground">
+        Datos sensibles protegidos conforme a la Ley N.º 21.719 sobre protección de datos personales.
+      </footer>
+    </div>
   );
 }
