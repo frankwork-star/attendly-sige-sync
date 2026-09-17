@@ -63,6 +63,8 @@ function AttendancePage() {
     return toIsoDate(new Date(y ?? 2026, m ?? 1, 0));
   })();
 
+  const { ids: allowedCourseIds, restricted } = useAllowedCourseIds();
+
   const courses = useQuery({
     queryKey: ["courses"],
     queryFn: async () => {
@@ -72,7 +74,14 @@ function AttendancePage() {
     },
   });
 
-  const activeCourse = courseId || courses.data?.[0]?.id || "";
+  const visibleCourses = (courses.data ?? []).filter(
+    (c) => allowedCourseIds === null || allowedCourseIds.includes(c.id),
+  );
+
+  const activeCourse =
+    (courseId && visibleCourses.some((c) => c.id === courseId) ? courseId : "") ||
+    visibleCourses[0]?.id ||
+    "";
 
   const students = useQuery({
     queryKey: ["course-students", activeCourse],
