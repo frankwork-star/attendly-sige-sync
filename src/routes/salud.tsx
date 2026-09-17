@@ -5,6 +5,7 @@ import { Lock, Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ROLE_LABEL, fullName } from "@/lib/school";
 import { useRole } from "@/lib/role";
+import { useAllowedCourseIds } from "@/lib/scope";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,7 @@ export const Route = createFileRoute("/salud")({
 
 function HealthPage() {
   const { role, session } = useRole();
+  const { ids: allowedCourseIds } = useAllowedCourseIds();
   const [q, setQ] = useState("");
   const [selected, setSelected] = useState<string | null>(null);
 
@@ -40,7 +42,9 @@ function HealthPage() {
       const [studentRes, allergyRes] = await Promise.all([
         supabase
           .from("students")
-          .select("id, apellido_paterno, apellido_materno, nombres, run_ipe, level, courses(name)")
+          .select(
+            "id, course_id, apellido_paterno, apellido_materno, nombres, run_ipe, level, courses(name)",
+          )
           .order("apellido_paterno"),
         supabase.from("health_allergies").select("student_id"),
       ]);
@@ -53,9 +57,13 @@ function HealthPage() {
     },
   });
 
-  const visible = (students.data ?? []).filter((s) =>
-    fullName(s).toLowerCase().includes(q.toLowerCase()),
+  const inScope = (students.data ?? []).filter(
+    (s) =>
+      role === "apoderado" ||
+      allowedCourseIds === null ||
+      (s.course_id ? allowedCourseIds.includes(s.course_id) : false),
   );
+  const visible = inScope.filter((s) => fullName(s).toLowerCase().includes(q.toLowerCase()));
   const list = role === "apoderado" ? visible.slice(0, 1) : visible;
   const current = list.find((s) => s.id === selected) ?? list[0];
 

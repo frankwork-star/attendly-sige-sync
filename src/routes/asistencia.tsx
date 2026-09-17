@@ -12,6 +12,7 @@ import {
   toIsoDate,
   type AttendanceStatus,
 } from "@/lib/school";
+import { useAllowedCourseIds } from "@/lib/scope";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -63,6 +64,8 @@ function AttendancePage() {
     return toIsoDate(new Date(y ?? 2026, m ?? 1, 0));
   })();
 
+  const { ids: allowedCourseIds, restricted } = useAllowedCourseIds();
+
   const courses = useQuery({
     queryKey: ["courses"],
     queryFn: async () => {
@@ -72,7 +75,14 @@ function AttendancePage() {
     },
   });
 
-  const activeCourse = courseId || courses.data?.[0]?.id || "";
+  const visibleCourses = (courses.data ?? []).filter(
+    (c) => allowedCourseIds === null || allowedCourseIds.includes(c.id),
+  );
+
+  const activeCourse =
+    (courseId && visibleCourses.some((c) => c.id === courseId) ? courseId : "") ||
+    visibleCourses[0]?.id ||
+    "";
 
   const students = useQuery({
     queryKey: ["course-students", activeCourse],
@@ -188,6 +198,14 @@ function AttendancePage() {
         </p>
       </div>
 
+      {restricted && (
+        <div className="rounded-xl border border-border bg-muted/50 p-4 text-sm text-muted-foreground">
+          {visibleCourses.length === 0
+            ? "Aún no tienes cursos asignados. Pide al Encargado que te asigne uno."
+            : "Ves únicamente los cursos que tienes asignados."}
+        </div>
+      )}
+
       <div className="flex flex-wrap items-end gap-3">
         <div>
           <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
@@ -198,7 +216,7 @@ function AttendancePage() {
               <SelectValue placeholder="Selecciona un curso" />
             </SelectTrigger>
             <SelectContent>
-              {(courses.data ?? []).map((c) => (
+              {visibleCourses.map((c) => (
                 <SelectItem key={c.id} value={c.id}>
                   {c.name} · {c.level}
                 </SelectItem>
