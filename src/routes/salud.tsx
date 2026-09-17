@@ -5,6 +5,7 @@ import { Lock, Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ROLE_LABEL, fullName } from "@/lib/school";
 import { useRole } from "@/lib/role";
+import { useAllowedCourseIds } from "@/lib/scope";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -40,7 +41,9 @@ function HealthPage() {
       const [studentRes, allergyRes] = await Promise.all([
         supabase
           .from("students")
-          .select("id, apellido_paterno, apellido_materno, nombres, run_ipe, level, courses(name)")
+          .select(
+            "id, course_id, apellido_paterno, apellido_materno, nombres, run_ipe, level, courses(name)",
+          )
           .order("apellido_paterno"),
         supabase.from("health_allergies").select("student_id"),
       ]);
