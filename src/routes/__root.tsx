@@ -8,12 +8,23 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
-import { CalendarCheck2, FileSpreadsheet, HeartPulse, Home, Users } from "lucide-react";
+import {
+  CalendarCheck2,
+  FileSpreadsheet,
+  HeartPulse,
+  Home,
+  LogIn,
+  LogOut,
+  Settings,
+  Users,
+} from "lucide-react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { RoleProvider } from "../lib/role";
+import { RoleProvider, useRole } from "../lib/role";
+import { ROLE_LABEL } from "../lib/school";
 import { Toaster } from "../components/ui/sonner";
+import { Button } from "../components/ui/button";
 
 function NotFoundComponent() {
   return (
