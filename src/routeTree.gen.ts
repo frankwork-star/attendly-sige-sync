@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AsistenciaRouteImport } from './routes/asistencia'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SaludRouteImport } from './routes/salud'
 import { Route as SigeRouteImport } from './routes/sige'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -36,6 +37,11 @@ const AsistenciaRoute = AsistenciaRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SaludRoute = SaludRouteImport.update({
@@ -68,6 +74,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/asistencia': typeof AsistenciaRoute
   '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/salud': typeof SaludRoute
   '/sige': typeof SigeRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/asistencia': typeof AsistenciaRoute
   '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/salud': typeof SaludRoute
   '/sige': typeof SigeRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -90,6 +98,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/asistencia': typeof AsistenciaRoute
   '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/salud': typeof SaludRoute
   '/sige': typeof SigeRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
@@ -102,6 +111,7 @@ export interface FileRouteTypes {
     | '/'
     | '/asistencia'
     | '/auth'
+    | '/reset-password'
     | '/salud'
     | '/sige'
     | '/admin'
@@ -112,6 +122,7 @@ export interface FileRouteTypes {
     | '/'
     | '/asistencia'
     | '/auth'
+    | '/reset-password'
     | '/salud'
     | '/sige'
     | '/admin'
@@ -123,6 +134,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/asistencia'
     | '/auth'
+    | '/reset-password'
     | '/salud'
     | '/sige'
     | '/_authenticated/admin'
@@ -135,6 +147,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AsistenciaRoute: typeof AsistenciaRoute
   AuthRoute: typeof AuthRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SaludRoute: typeof SaludRoute
   SigeRoute: typeof SigeRoute
   EstudiantesIdRoute: typeof EstudiantesIdRoute
@@ -169,6 +182,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/salud': {
@@ -225,6 +245,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AsistenciaRoute: AsistenciaRoute,
   AuthRoute: AuthRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SaludRoute: SaludRoute,
   SigeRoute: SigeRoute,
   EstudiantesIdRoute: EstudiantesIdRoute,
