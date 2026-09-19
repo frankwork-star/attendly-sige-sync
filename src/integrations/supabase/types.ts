@@ -281,24 +281,83 @@ export type Database = {
           },
         ]
       }
+      pending_users: {
+        Row: {
+          attempts: number
+          code_hash: string
+          confirmed_at: string | null
+          course_id: string | null
+          created_at: string
+          created_by: string
+          email: string
+          expires_at: string
+          full_name: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          rut: string | null
+          status: string
+        }
+        Insert: {
+          attempts?: number
+          code_hash: string
+          confirmed_at?: string | null
+          course_id?: string | null
+          created_at?: string
+          created_by: string
+          email: string
+          expires_at: string
+          full_name: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          rut?: string | null
+          status?: string
+        }
+        Update: {
+          attempts?: number
+          code_hash?: string
+          confirmed_at?: string | null
+          course_id?: string | null
+          created_at?: string
+          created_by?: string
+          email?: string
+          expires_at?: string
+          full_name?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          rut?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pending_users_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
           email: string | null
           full_name: string | null
           id: string
+          rut: string | null
         }
         Insert: {
           created_at?: string
           email?: string | null
           full_name?: string | null
           id: string
+          rut?: string | null
         }
         Update: {
           created_at?: string
           email?: string | null
           full_name?: string | null
           id?: string
+          rut?: string | null
         }
         Relationships: []
       }
@@ -449,6 +508,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_read_student: { Args: { _student_id: string }; Returns: boolean }
+      can_write_attendance: { Args: { _student_id: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -456,6 +517,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      teaches_course: { Args: { _course_id: string }; Returns: boolean }
     }
     Enums: {
       app_role: "encargado" | "educadora" | "apoderado"
