@@ -321,6 +321,7 @@ function StudentDetail() {
               </Button>
             </div>
           </section>
+          )}
 
           <section className="surface-panel p-6">
             <h2 className="font-display text-lg font-semibold">Historial de movimientos</h2>
