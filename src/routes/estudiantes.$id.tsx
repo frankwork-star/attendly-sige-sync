@@ -267,6 +267,7 @@ function StudentDetail() {
         </TabsContent>
 
         <TabsContent value="movimientos" className="mt-4 space-y-6">
+          {canEditStudents && (
           <section className="surface-panel space-y-4 p-6">
             <h2 className="font-display text-lg font-semibold">Registrar movimiento</h2>
             <div className="grid gap-4 sm:grid-cols-2">
