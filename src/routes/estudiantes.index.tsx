@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Plus, Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { LEVELS, fullName } from "@/lib/school";
+import { useRole } from "@/lib/role";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -45,6 +46,7 @@ export const Route = createFileRoute("/estudiantes/")({
 });
 
 function StudentsPage() {
+  const { canEditStudents } = useRole();
   const [q, setQ] = useState("");
   const [level, setLevel] = useState("todos");
   const [open, setOpen] = useState(false);
@@ -77,19 +79,21 @@ function StudentsPage() {
             Fichas de estudiantes, apoderados y su historial de movimientos.
           </p>
         </div>
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-1 size-4" /> Nueva matrícula
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-h-[85vh] max-w-4xl overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle className="font-display text-2xl">Nueva matrícula</DialogTitle>
-            </DialogHeader>
-            <StudentForm onDone={() => setOpen(false)} />
-          </DialogContent>
-        </Dialog>
+        {canEditStudents && (
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="mr-1 size-4" /> Nueva matrícula
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-h-[85vh] max-w-4xl overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle className="font-display text-2xl">Nueva matrícula</DialogTitle>
+              </DialogHeader>
+              <StudentForm onDone={() => setOpen(false)} />
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
 
       <div className="flex flex-wrap gap-3">
