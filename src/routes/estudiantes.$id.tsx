@@ -226,38 +226,43 @@ function StudentDetail() {
             ) : (
               <p className="text-sm text-muted-foreground">Aún no se ha cargado el resultado.</p>
             )}
-            <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-dashed border-primary/40 bg-primary/5 px-4 py-3 text-sm font-medium text-primary">
-              <Upload className="size-4" />
-              {uploading ? "Cargando…" : "Cargar archivo"}
-              <input
-                type="file"
-                className="hidden"
-                accept="application/pdf,image/*"
-                disabled={uploading}
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) uploadSpeechTest(file);
-                }}
-              />
-            </label>
+            {canEditStudents && (
+              <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-dashed border-primary/40 bg-primary/5 px-4 py-3 text-sm font-medium text-primary">
+                <Upload className="size-4" />
+                {uploading ? "Cargando…" : "Cargar archivo"}
+                <input
+                  type="file"
+                  className="hidden"
+                  accept="application/pdf,image/*"
+                  disabled={uploading}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) uploadSpeechTest(file);
+                  }}
+                />
+              </label>
+            )}
           </section>
 
           <section className="surface-panel space-y-4 p-6">
             <h2 className="font-display text-lg font-semibold">Entrevista a apoderados</h2>
             <Textarea
               rows={10}
+              readOnly={!canEditStudents}
               value={interviewValue}
               onChange={(e) => setInterview(e.target.value)}
               placeholder="Registra aquí el detalle de la entrevista con el apoderado…"
             />
-            <div className="flex justify-end">
-              <Button
-                onClick={() => saveInterview.mutate(interviewValue)}
-                disabled={saveInterview.isPending}
-              >
-                Guardar entrevista
-              </Button>
-            </div>
+            {canEditStudents && (
+              <div className="flex justify-end">
+                <Button
+                  onClick={() => saveInterview.mutate(interviewValue)}
+                  disabled={saveInterview.isPending}
+                >
+                  Guardar entrevista
+                </Button>
+              </div>
+            )}
           </section>
         </TabsContent>
 
