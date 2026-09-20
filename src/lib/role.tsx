@@ -17,6 +17,7 @@ type Profile = {
   id: string;
   full_name: string | null;
   email: string | null;
+  rut: string | null;
 };
 
 type RoleContextValue = {
@@ -29,6 +30,7 @@ type RoleContextValue = {
   canEditHealth: boolean;
   canDeleteHealth: boolean;
   canEditStudents: boolean;
+  canEditAttendance: boolean;
   refresh: () => Promise<void>;
   signOut: () => Promise<void>;
 };
@@ -43,6 +45,7 @@ const RoleContext = createContext<RoleContextValue>({
   canEditHealth: false,
   canDeleteHealth: false,
   canEditStudents: false,
+  canEditAttendance: false,
   refresh: async () => {},
   signOut: async () => {},
 });
@@ -71,7 +74,7 @@ export function RoleProvider({ children }: { children: ReactNode }) {
     }
     const userId = nextSession.user.id;
     const [profileRes, rolesRes] = await Promise.all([
-      supabase.from("profiles").select("id, full_name, email").eq("id", userId).maybeSingle(),
+      supabase.from("profiles").select("id, full_name, email, rut").eq("id", userId).maybeSingle(),
       supabase.from("user_roles").select("role").eq("user_id", userId),
     ]);
     setProfile(profileRes.data ?? null);
