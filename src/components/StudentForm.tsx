@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { LEVELS, type Student } from "@/lib/school";
+import { useRole } from "@/lib/role";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -48,6 +49,8 @@ type Props = {
 
 export function StudentForm({ student, onDone }: Props) {
   const qc = useQueryClient();
+  const { canEditStudents } = useRole();
+  const readOnly = !canEditStudents;
   const [form, setForm] = useState({
     list_number: student?.list_number?.toString() ?? "",
     enrollment_number: student?.enrollment_number ?? "",
@@ -186,9 +189,16 @@ export function StudentForm({ student, onDone }: Props) {
       className="space-y-8"
       onSubmit={(e) => {
         e.preventDefault();
+        if (readOnly) return;
         save.mutate();
       }}
     >
+      {readOnly && (
+        <p className="rounded-lg border border-border bg-muted/50 px-4 py-3 text-sm text-muted-foreground">
+          Tu perfil tiene acceso de solo lectura a los datos de matrícula y apoderados.
+        </p>
+      )}
+      <fieldset disabled={readOnly} className="space-y-8 disabled:opacity-90">
       <section className="space-y-4">
         <h3 className="font-display text-lg font-semibold">Datos del alumno</h3>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -344,12 +354,15 @@ export function StudentForm({ student, onDone }: Props) {
           />
         </Field>
       </section>
+      </fieldset>
 
-      <div className="flex justify-end gap-2">
-        <Button type="submit" disabled={save.isPending}>
-          {save.isPending ? "Guardando…" : student ? "Guardar cambios" : "Matricular estudiante"}
-        </Button>
-      </div>
+      {!readOnly && (
+        <div className="flex justify-end gap-2">
+          <Button type="submit" disabled={save.isPending}>
+            {save.isPending ? "Guardando…" : student ? "Guardar cambios" : "Matricular estudiante"}
+          </Button>
+        </div>
+      )}
     </form>
   );
 }

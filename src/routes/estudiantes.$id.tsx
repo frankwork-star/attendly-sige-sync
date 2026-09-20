@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { ArrowLeft, FileText, Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { MOVEMENT_TYPES, formatDateLong, fullName, toIsoDate } from "@/lib/school";
+import { useRole } from "@/lib/role";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -42,6 +43,7 @@ export const Route = createFileRoute("/estudiantes/$id")({
 function StudentDetail() {
   const { id } = Route.useParams();
   const qc = useQueryClient();
+  const { canEditStudents } = useRole();
 
   const student = useQuery({
     queryKey: ["student", id],
@@ -224,42 +226,48 @@ function StudentDetail() {
             ) : (
               <p className="text-sm text-muted-foreground">Aún no se ha cargado el resultado.</p>
             )}
-            <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-dashed border-primary/40 bg-primary/5 px-4 py-3 text-sm font-medium text-primary">
-              <Upload className="size-4" />
-              {uploading ? "Cargando…" : "Cargar archivo"}
-              <input
-                type="file"
-                className="hidden"
-                accept="application/pdf,image/*"
-                disabled={uploading}
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) uploadSpeechTest(file);
-                }}
-              />
-            </label>
+            {canEditStudents && (
+              <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-dashed border-primary/40 bg-primary/5 px-4 py-3 text-sm font-medium text-primary">
+                <Upload className="size-4" />
+                {uploading ? "Cargando…" : "Cargar archivo"}
+                <input
+                  type="file"
+                  className="hidden"
+                  accept="application/pdf,image/*"
+                  disabled={uploading}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) uploadSpeechTest(file);
+                  }}
+                />
+              </label>
+            )}
           </section>
 
           <section className="surface-panel space-y-4 p-6">
             <h2 className="font-display text-lg font-semibold">Entrevista a apoderados</h2>
             <Textarea
               rows={10}
+              readOnly={!canEditStudents}
               value={interviewValue}
               onChange={(e) => setInterview(e.target.value)}
               placeholder="Registra aquí el detalle de la entrevista con el apoderado…"
             />
-            <div className="flex justify-end">
-              <Button
-                onClick={() => saveInterview.mutate(interviewValue)}
-                disabled={saveInterview.isPending}
-              >
-                Guardar entrevista
-              </Button>
-            </div>
+            {canEditStudents && (
+              <div className="flex justify-end">
+                <Button
+                  onClick={() => saveInterview.mutate(interviewValue)}
+                  disabled={saveInterview.isPending}
+                >
+                  Guardar entrevista
+                </Button>
+              </div>
+            )}
           </section>
         </TabsContent>
 
         <TabsContent value="movimientos" className="mt-4 space-y-6">
+          {canEditStudents && (
           <section className="surface-panel space-y-4 p-6">
             <h2 className="font-display text-lg font-semibold">Registrar movimiento</h2>
             <div className="grid gap-4 sm:grid-cols-2">
@@ -313,6 +321,7 @@ function StudentDetail() {
               </Button>
             </div>
           </section>
+          )}
 
           <section className="surface-panel p-6">
             <h2 className="font-display text-lg font-semibold">Historial de movimientos</h2>
