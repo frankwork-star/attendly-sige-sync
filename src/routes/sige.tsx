@@ -6,6 +6,7 @@ import * as XLSX from "xlsx";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { MONTHS, fullName, schoolDays } from "@/lib/school";
+import { useAllowedCourseIds } from "@/lib/scope";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -57,7 +58,9 @@ function SigePage() {
   const monthStart = days[0] ?? `${year}-${String(month).padStart(2, "0")}-01`;
   const monthEnd = days[days.length - 1] ?? monthStart;
 
-  const courses = useQuery({
+  const { ids: allowedCourseIds } = useAllowedCourseIds();
+
+  const coursesQuery = useQuery({
     queryKey: ["courses"],
     queryFn: async () => {
       const { data, error } = await supabase.from("courses").select("*").order("name");
@@ -66,8 +69,16 @@ function SigePage() {
     },
   });
 
-  const activeCourse = courseId || courses.data?.[0]?.id || "";
-  const course = (courses.data ?? []).find((c) => c.id === activeCourse);
+  const visibleCourses = (coursesQuery.data ?? []).filter(
+    (c) => allowedCourseIds === null || allowedCourseIds.includes(c.id),
+  );
+  const courses = { ...coursesQuery, data: visibleCourses };
+
+  const activeCourse =
+    (courseId && visibleCourses.some((c) => c.id === courseId) ? courseId : "") ||
+    visibleCourses[0]?.id ||
+    "";
+  const course = visibleCourses.find((c) => c.id === activeCourse);
 
   const data = useQuery({
     queryKey: ["sige", activeCourse, year, month],
