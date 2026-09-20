@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { ArrowLeft, FileText, Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { MOVEMENT_TYPES, formatDateLong, fullName, toIsoDate } from "@/lib/school";
+import { useRole } from "@/lib/role";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -42,6 +43,7 @@ export const Route = createFileRoute("/estudiantes/$id")({
 function StudentDetail() {
   const { id } = Route.useParams();
   const qc = useQueryClient();
+  const { canEditStudents } = useRole();
 
   const student = useQuery({
     queryKey: ["student", id],
