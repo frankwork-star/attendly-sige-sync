@@ -1,5 +1,5 @@
 # Asistencia Fácil
-
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 Nuestra propuesta para el módulo de Asistencia reemplaza el libro de asistencia en papel por un registro digital organizado por curso, facilitando el conteo y la revisión previa a su carga mensual en el SIGE (Sistema de Información General de Estudiantes del Mineduc). El sistema conserva el historial de asistencia de períodos anteriores.
 
 Sobre el registro digital por curso
