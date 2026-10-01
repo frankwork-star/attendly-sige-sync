@@ -10,12 +10,16 @@ import {
 import { useEffect, type ReactNode } from "react";
 import {
   CalendarCheck2,
+  ChevronDown,
+  ClipboardList,
   FileSpreadsheet,
-  HeartPulse,
+  FileCheck2,
+  History,
   Home,
   LogIn,
   LogOut,
   Settings,
+  UserRound,
   Users,
 } from "lucide-react";
 
@@ -25,6 +29,14 @@ import { RoleProvider, useRole } from "../lib/role";
 import { ROLE_LABEL } from "../lib/school";
 import { Toaster } from "../components/ui/sonner";
 import { Button } from "../components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../components/ui/dropdown-menu";
 
 function NotFoundComponent() {
   return (
@@ -140,9 +152,15 @@ function RootShell({ children }: { children: ReactNode }) {
 const NAV = [
   { to: "/", label: "Inicio", icon: Home },
   { to: "/estudiantes", label: "Matrícula", icon: Users },
-  { to: "/salud", label: "Salud escolar", icon: HeartPulse },
   { to: "/asistencia", label: "Asistencia", icon: CalendarCheck2 },
   { to: "/sige", label: "Revisión SIGE", icon: FileSpreadsheet },
+] as const;
+
+const STUDENT_NAV = [
+  { to: "/estudiantes/datos", label: "Datos", icon: UserRound },
+  { to: "/estudiantes/procesos", label: "Procesos de Matrícula", icon: FileCheck2 },
+  { to: "/estudiantes/movimientos", label: "Movimientos", icon: History },
+  { to: "/estudiantes/salud", label: "Salud Escolar", icon: ClipboardList },
 ] as const;
 
 function RootComponent() {
@@ -188,20 +206,22 @@ function AppShell() {
           </Link>
           <div className="flex flex-wrap items-center gap-2">
             <nav className="flex flex-wrap gap-1">
-              {nav.map(({ to, label, icon: Icon }) => (
-                <Link
-                  key={to}
-                  to={to}
-                  activeOptions={{ exact: to === "/" }}
-                  className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                  activeProps={{
-                    className:
-                      "inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold bg-sidebar-accent text-sidebar-primary",
-                  }}
-                >
-                  <Icon className="size-4" />
-                  {label}
-                </Link>
+              {nav.map(({ to, label, icon: Icon }, index) => (
+                <div key={to} className="contents">
+                  <Link
+                    to={to}
+                    activeOptions={{ exact: to === "/" || to === "/estudiantes" }}
+                    className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                    activeProps={{
+                      className:
+                        "inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold bg-sidebar-accent text-sidebar-primary",
+                    }}
+                  >
+                    <Icon className="size-4" />
+                    {label}
+                  </Link>
+                  {index === 1 && <StudentsMenu />}
+                </div>
               ))}
             </nav>
             {session ? (
@@ -235,5 +255,34 @@ function AppShell() {
         Datos sensibles protegidos conforme a la Ley N.º 21.719 sobre protección de datos personales.
       </footer>
     </div>
+  );
+}
+
+function StudentsMenu() {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          className="gap-2 text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-primary"
+        >
+          <Users className="size-4" />
+          Estudiantes
+          <ChevronDown className="size-3.5" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-64">
+        <DropdownMenuLabel>Registros de estudiantes</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {STUDENT_NAV.map(({ to, label, icon: Icon }) => (
+          <DropdownMenuItem key={to} asChild>
+            <Link to={to} className="cursor-pointer py-2.5">
+              <Icon className="size-4 text-primary" />
+              {label}
+            </Link>
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

@@ -67,7 +67,7 @@ function Home() {
       text: "Ficha completa del alumno y apoderado, test de fonoaudiología, entrevista e historial de movimientos.",
     },
     {
-      to: "/salud",
+      to: "/estudiantes/salud",
       icon: HeartPulse,
       title: "Salud escolar",
       text: "Alergias, condiciones preexistentes, tipo de sangre y contactos de emergencia con acceso por perfil.",
