@@ -4,15 +4,14 @@
 Reorganizar la navegación para agrupar los registros personales bajo **Estudiantes**, con cuatro submódulos coherentes y acciones visibles según el rol activo.
 
 ## Cambios
-- Reemplazar los accesos separados de Matrícula y Salud por un menú desplegable **Estudiantes** en la cabecera.
+- Mantener **Matrícula** exactamente como módulo independiente y añadir, además, un menú desplegable **Estudiantes** en la cabecera; solo Salud Escolar dejará de ser un acceso principal separado.
 - Crear rutas independientes para:
   - **Datos**: listado con identidad, RUN/IPE, nivel y curso.
   - **Procesos de Matrícula**: listado orientado a matrícula, entrevista y documento fonoaudiológico.
   - **Movimientos**: listado con último movimiento e ingreso al historial individual.
   - **Salud Escolar**: trasladar la vista actual sin cambiar su lógica de datos.
-- Mantener `/estudiantes` como entrada del módulo y redirigir `/salud` a la nueva ubicación para conservar enlaces existentes.
+- Mantener la ruta y experiencia actual de **Matrícula** sin modificaciones. Las nuevas páginas de Estudiantes usarán rutas separadas, y `/salud` redirigirá a la nueva ubicación para conservar enlaces existentes.
 - Crear una estructura visual compartida para encabezado, buscador, filtros por nivel/curso, tabla, estados de carga/vacío y acceso a la ficha.
-- Adaptar la ficha individual para que el submódulo de origen pueda abrir directamente la sección correspondiente.
 
 ## Permisos
 - **Educadora**: consultas limitadas a su curso y todas las vistas en solo lectura; no se mostrarán acciones de crear, editar, eliminar, cargar archivos ni guardar.
