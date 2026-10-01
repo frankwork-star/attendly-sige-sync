@@ -17,7 +17,7 @@ export function useAllowedCourseIds() {
       const { data, error } = await supabase
         .from("courses")
         .select("id")
-        .eq("teacher_profile_id", user!.id);
+        .eq("teacher_profile_id", user.id);
       if (error) throw error;
       return (data ?? []).map((c) => c.id);
     },

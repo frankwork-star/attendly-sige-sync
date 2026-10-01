@@ -19,6 +19,10 @@ import { Route as SigeRouteImport } from './routes/sige'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as EstudiantesIndexRouteImport } from './routes/estudiantes.index'
 import { Route as EstudiantesIdRouteImport } from './routes/estudiantes.$id'
+import { Route as EstudiantesDatosRouteImport } from './routes/estudiantes.datos'
+import { Route as EstudiantesMovimientosRouteImport } from './routes/estudiantes.movimientos'
+import { Route as EstudiantesProcesosRouteImport } from './routes/estudiantes.procesos'
+import { Route as EstudiantesSaludRouteImport } from './routes/estudiantes.salud'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -69,6 +73,26 @@ const EstudiantesIdRoute = EstudiantesIdRouteImport.update({
   path: '/estudiantes/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EstudiantesDatosRoute = EstudiantesDatosRouteImport.update({
+  id: '/estudiantes/datos',
+  path: '/estudiantes/datos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EstudiantesMovimientosRoute = EstudiantesMovimientosRouteImport.update({
+  id: '/estudiantes/movimientos',
+  path: '/estudiantes/movimientos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EstudiantesProcesosRoute = EstudiantesProcesosRouteImport.update({
+  id: '/estudiantes/procesos',
+  path: '/estudiantes/procesos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EstudiantesSaludRoute = EstudiantesSaludRouteImport.update({
+  id: '/estudiantes/salud',
+  path: '/estudiantes/salud',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -79,6 +103,10 @@ export interface FileRoutesByFullPath {
   '/sige': typeof SigeRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/estudiantes/$id': typeof EstudiantesIdRoute
+  '/estudiantes/datos': typeof EstudiantesDatosRoute
+  '/estudiantes/movimientos': typeof EstudiantesMovimientosRoute
+  '/estudiantes/procesos': typeof EstudiantesProcesosRoute
+  '/estudiantes/salud': typeof EstudiantesSaludRoute
   '/estudiantes/': typeof EstudiantesIndexRoute
 }
 export interface FileRoutesByTo {
@@ -90,6 +118,10 @@ export interface FileRoutesByTo {
   '/sige': typeof SigeRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/estudiantes/$id': typeof EstudiantesIdRoute
+  '/estudiantes/datos': typeof EstudiantesDatosRoute
+  '/estudiantes/movimientos': typeof EstudiantesMovimientosRoute
+  '/estudiantes/procesos': typeof EstudiantesProcesosRoute
+  '/estudiantes/salud': typeof EstudiantesSaludRoute
   '/estudiantes': typeof EstudiantesIndexRoute
 }
 export interface FileRoutesById {
@@ -103,6 +135,10 @@ export interface FileRoutesById {
   '/sige': typeof SigeRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/estudiantes/$id': typeof EstudiantesIdRoute
+  '/estudiantes/datos': typeof EstudiantesDatosRoute
+  '/estudiantes/movimientos': typeof EstudiantesMovimientosRoute
+  '/estudiantes/procesos': typeof EstudiantesProcesosRoute
+  '/estudiantes/salud': typeof EstudiantesSaludRoute
   '/estudiantes/': typeof EstudiantesIndexRoute
 }
 export interface FileRouteTypes {
@@ -116,6 +152,10 @@ export interface FileRouteTypes {
     | '/sige'
     | '/admin'
     | '/estudiantes/$id'
+    | '/estudiantes/datos'
+    | '/estudiantes/movimientos'
+    | '/estudiantes/procesos'
+    | '/estudiantes/salud'
     | '/estudiantes/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -127,6 +167,10 @@ export interface FileRouteTypes {
     | '/sige'
     | '/admin'
     | '/estudiantes/$id'
+    | '/estudiantes/datos'
+    | '/estudiantes/movimientos'
+    | '/estudiantes/procesos'
+    | '/estudiantes/salud'
     | '/estudiantes'
   id:
     | '__root__'
@@ -139,6 +183,10 @@ export interface FileRouteTypes {
     | '/sige'
     | '/_authenticated/admin'
     | '/estudiantes/$id'
+    | '/estudiantes/datos'
+    | '/estudiantes/movimientos'
+    | '/estudiantes/procesos'
+    | '/estudiantes/salud'
     | '/estudiantes/'
   fileRoutesById: FileRoutesById
 }
@@ -151,6 +199,10 @@ export interface RootRouteChildren {
   SaludRoute: typeof SaludRoute
   SigeRoute: typeof SigeRoute
   EstudiantesIdRoute: typeof EstudiantesIdRoute
+  EstudiantesDatosRoute: typeof EstudiantesDatosRoute
+  EstudiantesMovimientosRoute: typeof EstudiantesMovimientosRoute
+  EstudiantesProcesosRoute: typeof EstudiantesProcesosRoute
+  EstudiantesSaludRoute: typeof EstudiantesSaludRoute
   EstudiantesIndexRoute: typeof EstudiantesIndexRoute
 }
 
@@ -226,6 +278,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EstudiantesIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/estudiantes/datos': {
+      id: '/estudiantes/datos'
+      path: '/estudiantes/datos'
+      fullPath: '/estudiantes/datos'
+      preLoaderRoute: typeof EstudiantesDatosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/estudiantes/movimientos': {
+      id: '/estudiantes/movimientos'
+      path: '/estudiantes/movimientos'
+      fullPath: '/estudiantes/movimientos'
+      preLoaderRoute: typeof EstudiantesMovimientosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/estudiantes/procesos': {
+      id: '/estudiantes/procesos'
+      path: '/estudiantes/procesos'
+      fullPath: '/estudiantes/procesos'
+      preLoaderRoute: typeof EstudiantesProcesosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/estudiantes/salud': {
+      id: '/estudiantes/salud'
+      path: '/estudiantes/salud'
+      fullPath: '/estudiantes/salud'
+      preLoaderRoute: typeof EstudiantesSaludRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -249,6 +329,10 @@ const rootRouteChildren: RootRouteChildren = {
   SaludRoute: SaludRoute,
   SigeRoute: SigeRoute,
   EstudiantesIdRoute: EstudiantesIdRoute,
+  EstudiantesDatosRoute: EstudiantesDatosRoute,
+  EstudiantesMovimientosRoute: EstudiantesMovimientosRoute,
+  EstudiantesProcesosRoute: EstudiantesProcesosRoute,
+  EstudiantesSaludRoute: EstudiantesSaludRoute,
   EstudiantesIndexRoute: EstudiantesIndexRoute,
 }
 export const routeTree = rootRouteImport

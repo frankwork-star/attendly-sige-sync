@@ -25,6 +25,8 @@ export const Route = createFileRoute("/estudiantes/salud")({
         property: "og:description",
         content: "Ficha de salud vinculada a la ficha del estudiante, con control de acceso.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: HealthPage,
