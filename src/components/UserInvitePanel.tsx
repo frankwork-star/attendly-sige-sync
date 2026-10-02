@@ -249,7 +249,7 @@ function PendingRow({
   onCancel,
 }: {
   row: PendingRowData;
-  code?: string;
+  code?: string | undefined;
   courses: CourseOption[];
   busy: boolean;
   onConfirm: (code: string) => void;
