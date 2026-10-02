@@ -23,6 +23,8 @@ import {
   Users,
 } from "lucide-react";
 
+import logoPaihuen from "../assets/logo-paihuen.png.asset.json";
+
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { RoleProvider, useRole } from "../lib/role";
@@ -120,7 +122,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
@@ -192,9 +194,11 @@ function AppShell() {
       <header className="sticky top-0 z-40 border-b border-sidebar-border bg-sidebar text-sidebar-foreground">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 md:flex-row md:items-center md:justify-between">
           <Link to="/" className="flex items-center gap-3">
-            <span className="grid size-10 place-items-center rounded-xl bg-sidebar-primary text-sidebar-primary-foreground font-display text-lg font-bold">
-              P
-            </span>
+            <img
+              src={logoPaihuen.url}
+              alt="Escuela de Lenguaje Paihuen"
+              className="size-11 rounded-xl bg-white object-contain p-0.5"
+            />
             <span>
               <span className="block font-display text-lg font-semibold leading-tight">
                 Escuela Paihuen
