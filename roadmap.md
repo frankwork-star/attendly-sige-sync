@@ -5,3 +5,4 @@
 - [ ] Trasladar la navegación de Salud Escolar al grupo Estudiantes conservando su vista y lógica.
 - [ ] Aplicar permisos de solo lectura a Educadora y escritura a Encargado en los nuevos submódulos.
 - [ ] Verificar navegación, permisos y presentación.
+- [ ] Añadir antecedentes familiares y apoderado suplente a la ficha personal.
