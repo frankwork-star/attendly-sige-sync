@@ -197,7 +197,8 @@ function AppShell() {
             <img
               src={logoPaihuen.url}
               alt="Escuela de Lenguaje Paihuen"
-              className="size-11 rounded-xl bg-white object-contain p-0.5"
+              className="size-16 rounded-xl object-contain"
+            
             />
             <span>
               <span className="block font-display text-lg font-semibold leading-tight">
