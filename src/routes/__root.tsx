@@ -192,65 +192,66 @@ function AppShell() {
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-40 border-b border-sidebar-border bg-sidebar text-sidebar-foreground">
-        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 md:flex-row md:items-center md:justify-between">
-          <Link to="/" className="flex items-center gap-3">
-            <img
-              src={logoPaihuen.url}
-              alt="Escuela de Lenguaje Paihuen"
-              className="size-16 rounded-xl object-contain"
-            
-            />
-            <span>
-              <span className="block font-display text-lg font-semibold leading-tight">
-                Escuela Paihuen
-              </span>
-              <span className="block text-xs text-sidebar-foreground/70">
-                Matrícula · Salud · Asistencia SIGE
-              </span>
-            </span>
-          </Link>
-          <div className="flex flex-wrap items-center gap-2">
-            <nav className="flex flex-wrap gap-1">
-              {nav.map(({ to, label, icon: Icon }, index) => (
-                <div key={to} className="contents">
-                  <Link
-                    to={to}
-                    activeOptions={{ exact: to === "/" || to === "/estudiantes" }}
-                    className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                    activeProps={{
-                      className:
-                        "inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold bg-sidebar-accent text-sidebar-primary",
-                    }}
-                  >
-                    <Icon className="size-4" />
-                    {label}
-                  </Link>
-                  {index === 1 && <StudentsMenu />}
-                </div>
-              ))}
-            </nav>
-            {session ? (
-              <div className="flex items-center gap-2 border-l border-sidebar-border pl-2">
-                <span className="hidden text-right text-xs leading-tight sm:block">
-                  <span className="block font-medium">
-                    {profile?.full_name?.trim() || profile?.email || "Cuenta"}
-                  </span>
-                  <span className="block text-sidebar-foreground/70">{ROLE_LABEL[role]}</span>
+        <div className="mx-auto max-w-7xl px-4 py-3">
+          <div className="flex items-center justify-between gap-3">
+            <Link to="/" className="flex items-center gap-3">
+              <img
+                src={logoPaihuen.url}
+                alt="Escuela de Lenguaje Paihuen"
+                className="size-16 rounded-xl object-contain"
+              />
+              <span>
+                <span className="block font-display text-lg font-semibold leading-tight">
+                  Escuela Paihuen
                 </span>
-                <Button variant="secondary" size="sm" onClick={handleSignOut}>
-                  <LogOut className="size-4" />
-                  Salir
-                </Button>
-              </div>
-            ) : (
-              <Link to="/auth" className="ml-1">
-                <Button variant="secondary" size="sm">
-                  <LogIn className="size-4" />
-                  Ingresar
-                </Button>
-              </Link>
-            )}
+                <span className="block text-xs text-sidebar-foreground/70">
+                  Matrícula · Salud · Asistencia SIGE
+                </span>
+              </span>
+            </Link>
+            <div className="flex shrink-0 items-center gap-2">
+              {session ? (
+                <>
+                  <span className="hidden text-right text-xs leading-tight sm:block">
+                    <span className="block font-medium">
+                      {profile?.full_name?.trim() || profile?.email || "Cuenta"}
+                    </span>
+                    <span className="block text-sidebar-foreground/70">{ROLE_LABEL[role]}</span>
+                  </span>
+                  <Button variant="secondary" size="sm" onClick={handleSignOut}>
+                    <LogOut className="size-4" />
+                    Salir
+                  </Button>
+                </>
+              ) : (
+                <Link to="/auth">
+                  <Button variant="secondary" size="sm">
+                    <LogIn className="size-4" />
+                    Ingresar
+                  </Button>
+                </Link>
+              )}
+            </div>
           </div>
+          <nav className="mt-3 flex flex-wrap gap-1">
+            {nav.map(({ to, label, icon: Icon }, index) => (
+              <div key={to} className="contents">
+                <Link
+                  to={to}
+                  activeOptions={{ exact: to === "/" || to === "/estudiantes" }}
+                  className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                  activeProps={{
+                    className:
+                      "inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold bg-sidebar-accent text-sidebar-primary",
+                  }}
+                >
+                  <Icon className="size-4" />
+                  {label}
+                </Link>
+                {index === 1 && <StudentsMenu />}
+              </div>
+            ))}
+          </nav>
         </div>
       </header>
       <main className="mx-auto max-w-7xl px-4 py-8">
