@@ -182,7 +182,8 @@ function AppShell() {
   const { session, profile, role, isAdmin, signOut } = useRole();
   const router = useRouter();
 
-  const nav = isAdmin ? [...NAV, { to: "/admin", label: "Administración", icon: Settings }] : NAV;
+  const baseNav = role === "educadora" ? NAV.filter((n) => n.to !== "/estudiantes") : [...NAV];
+  const nav = isAdmin ? [...baseNav, { to: "/admin", label: "Administración", icon: Settings }] : baseNav;
 
   async function handleSignOut() {
     await signOut();
@@ -248,7 +249,7 @@ function AppShell() {
                   <Icon className="size-4" />
                   {label}
                 </Link>
-                {index === 1 && <StudentsMenu />}
+                {to === (role === "educadora" ? "/" : "/estudiantes") && <StudentsMenu />}
               </div>
             ))}
           </nav>
