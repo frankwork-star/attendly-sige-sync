@@ -40,7 +40,7 @@ const CONFIG = {
 } as const;
 
 export function StudentRegistryView({ kind }: { kind: RegistryKind }) {
-  const { ids: allowedCourseIds } = useAllowedCourseIds();
+  const { ids: allowedCourseIds } = useAllowedCourseIds("read");
   const { canEditStudents } = useRole();
   const [q, setQ] = useState("");
   const [level, setLevel] = useState("todos");

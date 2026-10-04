@@ -34,7 +34,7 @@ export const Route = createFileRoute("/estudiantes/salud")({
 
 export function HealthPage() {
   const { role, session } = useRole();
-  const { ids: allowedCourseIds } = useAllowedCourseIds();
+  const { ids: allowedCourseIds } = useAllowedCourseIds("read");
   const [q, setQ] = useState("");
   const [selected, setSelected] = useState<string | null>(null);
 
