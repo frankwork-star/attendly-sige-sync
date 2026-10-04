@@ -145,6 +145,7 @@ export type Database = {
           nombres: string | null
           observations: string | null
           phone: string | null
+          relationship: string | null
           student_id: string
         }
         Insert: {
@@ -159,6 +160,7 @@ export type Database = {
           nombres?: string | null
           observations?: string | null
           phone?: string | null
+          relationship?: string | null
           student_id: string
         }
         Update: {
@@ -173,6 +175,7 @@ export type Database = {
           nombres?: string | null
           observations?: string | null
           phone?: string | null
+          relationship?: string | null
           student_id?: string
         }
         Relationships: [
@@ -409,6 +412,7 @@ export type Database = {
           apellido_materno: string | null
           apellido_paterno: string
           birth_date: string | null
+          children_count: number | null
           comuna: string | null
           course_id: string | null
           created_at: string
@@ -418,10 +422,13 @@ export type Database = {
           is_sample: boolean
           level: string
           list_number: number | null
+          lives_with: string | null
           nee_full_support: boolean
           nombres: string
+          parents_marital_status: string | null
           run_ipe: string | null
           sex: string | null
+          sibling_position: string | null
           speech_test_name: string | null
           speech_test_url: string | null
           updated_at: string
@@ -432,6 +439,7 @@ export type Database = {
           apellido_materno?: string | null
           apellido_paterno: string
           birth_date?: string | null
+          children_count?: number | null
           comuna?: string | null
           course_id?: string | null
           created_at?: string
@@ -441,10 +449,13 @@ export type Database = {
           is_sample?: boolean
           level?: string
           list_number?: number | null
+          lives_with?: string | null
           nee_full_support?: boolean
           nombres: string
+          parents_marital_status?: string | null
           run_ipe?: string | null
           sex?: string | null
+          sibling_position?: string | null
           speech_test_name?: string | null
           speech_test_url?: string | null
           updated_at?: string
@@ -455,6 +466,7 @@ export type Database = {
           apellido_materno?: string | null
           apellido_paterno?: string
           birth_date?: string | null
+          children_count?: number | null
           comuna?: string | null
           course_id?: string | null
           created_at?: string
@@ -464,10 +476,13 @@ export type Database = {
           is_sample?: boolean
           level?: string
           list_number?: number | null
+          lives_with?: string | null
           nee_full_support?: boolean
           nombres?: string
+          parents_marital_status?: string | null
           run_ipe?: string | null
           sex?: string | null
+          sibling_position?: string | null
           speech_test_name?: string | null
           speech_test_url?: string | null
           updated_at?: string
@@ -478,6 +493,53 @@ export type Database = {
             columns: ["course_id"]
             isOneToOne: false
             referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      substitute_guardians: {
+        Row: {
+          address: string | null
+          created_at: string
+          email: string | null
+          full_name: string
+          id: string
+          phone: string
+          relationship: string
+          rut: string
+          student_id: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          email?: string | null
+          full_name: string
+          id?: string
+          phone: string
+          relationship: string
+          rut: string
+          student_id: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          id?: string
+          phone?: string
+          relationship?: string
+          rut?: string
+          student_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "substitute_guardians_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: true
+            referencedRelation: "students"
             referencedColumns: ["id"]
           },
         ]
