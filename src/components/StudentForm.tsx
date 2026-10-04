@@ -28,7 +28,22 @@ type GuardianForm = {
   phone: string;
   email: string;
   observations: string;
+  relationship: string;
 };
+
+type SubForm = {
+  full_name: string;
+  rut: string;
+  relationship: string;
+  phone: string;
+  email: string;
+  address: string;
+};
+
+const emptySub: SubForm = { full_name: "", rut: "", relationship: "", phone: "", email: "", address: "" };
+
+export const MARITAL_STATUS = ["Casados", "Separados", "Viudo/a", "Conviviente", "Soltera/o"] as const;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const emptyGuardian: GuardianForm = {
   list_number: "",
@@ -40,6 +55,7 @@ const emptyGuardian: GuardianForm = {
   phone: "",
   email: "",
   observations: "",
+  relationship: "",
 };
 
 type Props = {
@@ -65,7 +81,43 @@ export function StudentForm({ student, onDone }: Props) {
     nee_full_support: student?.nee_full_support ?? false,
     address: student?.address ?? "",
     comuna: student?.comuna ?? "",
+    parents_marital_status: (student as { parents_marital_status?: string | null } | undefined)?.parents_marital_status ?? "",
+    lives_with: (student as { lives_with?: string | null } | undefined)?.lives_with ?? "",
+    children_count: (student as { children_count?: number | null } | undefined)?.children_count?.toString() ?? "",
+    sibling_position: (student as { sibling_position?: string | null } | undefined)?.sibling_position ?? "",
   });
+
+  const { data: subRow } = useQuery({
+    queryKey: ["substitute-guardian", student?.id],
+    enabled: !!student?.id,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("substitute_guardians")
+        .select("*")
+        .eq("student_id", student!.id)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
+  const [subEdits, setSubEdits] = useState<Partial<SubForm>>({});
+  const [subOpen, setSubOpen] = useState<boolean | null>(null);
+  const showSub = subOpen ?? !!subRow;
+  const sub: SubForm = {
+    ...emptySub,
+    ...(subRow
+      ? {
+          full_name: subRow.full_name,
+          rut: subRow.rut,
+          relationship: subRow.relationship,
+          phone: subRow.phone,
+          email: subRow.email ?? "",
+          address: subRow.address ?? "",
+        }
+      : {}),
+    ...subEdits,
+  };
+  const setS = (k: keyof SubForm, v: string) => setSubEdits((prev) => ({ ...prev, [k]: v }));
 
   const { data: courses } = useQuery({
     queryKey: ["courses"],
@@ -105,6 +157,7 @@ export function StudentForm({ student, onDone }: Props) {
           phone: guardianRow.phone ?? "",
           email: guardianRow.email ?? "",
           observations: guardianRow.observations ?? "",
+          relationship: guardianRow.relationship ?? "",
         }
       : {}),
     ...guardianEdits,
@@ -114,6 +167,20 @@ export function StudentForm({ student, onDone }: Props) {
     mutationFn: async () => {
       if (!form.apellido_paterno.trim() || !form.nombres.trim()) {
         throw new Error("El apellido paterno y los nombres son obligatorios.");
+      }
+      if (form.children_count && (!Number.isInteger(Number(form.children_count)) || Number(form.children_count) < 0)) {
+        throw new Error("El número de hijos debe ser un número entero no negativo.");
+      }
+      if (guardian.email && !EMAIL_RE.test(guardian.email)) {
+        throw new Error("El correo del apoderado no es válido.");
+      }
+      if (showSub) {
+        if (!sub.full_name.trim() || !sub.rut.trim() || !sub.relationship.trim() || !sub.phone.trim()) {
+          throw new Error("Completa nombre, RUT, parentesco y teléfono del apoderado suplente.");
+        }
+        if (sub.email && !EMAIL_RE.test(sub.email)) {
+          throw new Error("El correo del apoderado suplente no es válido.");
+        }
       }
       const payload = {
         list_number: form.list_number ? Number(form.list_number) : null,
@@ -129,6 +196,10 @@ export function StudentForm({ student, onDone }: Props) {
         nee_full_support: form.nee_full_support,
         address: form.address.trim() || null,
         comuna: form.comuna.trim() || null,
+        parents_marital_status: form.parents_marital_status || null,
+        lives_with: form.lives_with.trim() || null,
+        children_count: form.children_count ? Number(form.children_count) : null,
+        sibling_position: form.sibling_position.trim() || null,
       };
 
       let studentId = student?.id;
@@ -156,6 +227,7 @@ export function StudentForm({ student, onDone }: Props) {
         phone: guardian.phone || null,
         email: guardian.email || null,
         observations: guardian.observations || null,
+        relationship: guardian.relationship || null,
       };
       const hasGuardianData = Object.values(gPayload).some(
         (v) => v !== null && v !== studentId && v !== "",
@@ -167,12 +239,33 @@ export function StudentForm({ student, onDone }: Props) {
         const { error } = await supabase.from("guardians").insert(gPayload);
         if (error) throw error;
       }
+      if (showSub) {
+        const sPayload = {
+          student_id: studentId!,
+          full_name: sub.full_name.trim(),
+          rut: sub.rut.trim(),
+          relationship: sub.relationship.trim(),
+          phone: sub.phone.trim(),
+          email: sub.email.trim() || null,
+          address: sub.address.trim() || null,
+        };
+        const { error } = await supabase
+          .from("substitute_guardians")
+          .upsert(sPayload, { onConflict: "student_id" });
+        if (error) throw error;
+      } else if (subRow) {
+        const { error } = await supabase.from("substitute_guardians").delete().eq("id", subRow.id);
+        if (error) throw error;
+      }
       return studentId!;
     },
     onSuccess: (id) => {
       qc.invalidateQueries({ queryKey: ["students"] });
       qc.invalidateQueries({ queryKey: ["student", id] });
       qc.invalidateQueries({ queryKey: ["guardian", id] });
+      qc.invalidateQueries({ queryKey: ["substitute-guardian", id] });
+      setSubEdits({});
+      setSubOpen(null);
       toast.success(student ? "Ficha actualizada" : "Estudiante matriculado");
       onDone?.(id);
     },
@@ -305,6 +398,53 @@ export function StudentForm({ student, onDone }: Props) {
       </section>
 
       <section className="space-y-4">
+        <h3 className="font-display text-lg font-semibold">Antecedentes familiares</h3>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <Field label="Estado civil de los padres">
+            <Select
+              value={form.parents_marital_status || "none"}
+              onValueChange={(v) => set("parents_marital_status", v === "none" ? "" : v)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Seleccionar" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">Sin información</SelectItem>
+                {MARITAL_STATUS.map((m) => (
+                  <SelectItem key={m} value={m}>
+                    {m}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </Field>
+          <Field label="El niño/a vive con">
+            <Input
+              value={form.lives_with}
+              placeholder="Ej.: Madre y abuela"
+              onChange={(e) => set("lives_with", e.target.value)}
+            />
+          </Field>
+          <Field label="N.º de hijos">
+            <Input
+              type="number"
+              min={0}
+              step={1}
+              value={form.children_count}
+              onChange={(e) => set("children_count", e.target.value)}
+            />
+          </Field>
+          <Field label="Lugar que ocupa entre los hermanos">
+            <Input
+              value={form.sibling_position}
+              placeholder="Ej.: Mayor, 2.º de 3"
+              onChange={(e) => set("sibling_position", e.target.value)}
+            />
+          </Field>
+        </div>
+      </section>
+
+      <section className="space-y-4">
         <h3 className="font-display text-lg font-semibold">Datos del apoderado</h3>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <Field label="Número de lista">
@@ -338,6 +478,13 @@ export function StudentForm({ student, onDone }: Props) {
           <Field label="Teléfono">
             <Input value={guardian.phone} onChange={(e) => setG("phone", e.target.value)} />
           </Field>
+          <Field label="Parentesco o relación">
+            <Input
+              value={guardian.relationship}
+              placeholder="Ej.: Madre, Padre, Abuela"
+              onChange={(e) => setG("relationship", e.target.value)}
+            />
+          </Field>
           <Field label="Correo electrónico">
             <Input
               type="email"
@@ -353,6 +500,51 @@ export function StudentForm({ student, onDone }: Props) {
             onChange={(e) => setG("observations", e.target.value)}
           />
         </Field>
+      </section>
+
+      <section className="space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h3 className="font-display text-lg font-semibold">Apoderado suplente</h3>
+          {!readOnly && (
+            <Button
+              type="button"
+              variant={showSub ? "ghost" : "secondary"}
+              size="sm"
+              onClick={() => setSubOpen(!showSub)}
+            >
+              {showSub ? "Quitar apoderado suplente" : "Agregar apoderado suplente"}
+            </Button>
+          )}
+        </div>
+        {showSub ? (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <Field label="Nombre completo *">
+              <Input value={sub.full_name} onChange={(e) => setS("full_name", e.target.value)} />
+            </Field>
+            <Field label="RUT *">
+              <Input value={sub.rut} onChange={(e) => setS("rut", e.target.value)} />
+            </Field>
+            <Field label="Parentesco o relación *">
+              <Input value={sub.relationship} onChange={(e) => setS("relationship", e.target.value)} />
+            </Field>
+            <Field label="Teléfono de contacto *">
+              <Input value={sub.phone} onChange={(e) => setS("phone", e.target.value)} />
+            </Field>
+            <Field label="Correo electrónico (opcional)">
+              <Input type="email" value={sub.email} onChange={(e) => setS("email", e.target.value)} />
+            </Field>
+            <Field label="Dirección (opcional)">
+              <Input value={sub.address} onChange={(e) => setS("address", e.target.value)} />
+            </Field>
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground">No hay apoderado suplente registrado.</p>
+        )}
+        {!readOnly && subRow && !showSub && (
+          <p className="text-xs text-muted-foreground">
+            El apoderado suplente se eliminará al guardar los cambios.
+          </p>
+        )}
       </section>
       </fieldset>
 
