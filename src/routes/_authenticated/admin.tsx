@@ -2,7 +2,9 @@ import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Plus, ShieldAlert, Trash2, Users2 } from "lucide-react";
+import { Plus, ShieldAlert, Trash2 } from "lucide-react";
+
+import { UserInvitePanel } from "@/components/UserInvitePanel";
 
 import { supabase } from "@/integrations/supabase/client";
 import { useRole } from "@/lib/role";
@@ -416,11 +418,7 @@ function AdminPage() {
         </TabsContent>
 
         <TabsContent value="usuarios" className="space-y-4">
-          <div className="rounded-xl border border-border bg-muted/50 p-4 text-sm text-muted-foreground">
-            <Users2 className="mr-2 inline size-4 text-primary" />
-            Para agregar a alguien, pídele que cree su cuenta en la página de acceso con su correo.
-            Aparecerá aquí como Educadora y podrás cambiar su rol.
-          </div>
+          <UserInvitePanel courses={(courses.data ?? []).map((c) => ({ id: c.id, name: c.name, level: c.level }))} />
           <div className="surface-panel overflow-x-auto p-2">
             <Table>
               <TableHeader>
