@@ -418,7 +418,7 @@ function AdminPage() {
         </TabsContent>
 
         <TabsContent value="usuarios" className="space-y-4">
-          <UserInvitePanel courses={(courses.data ?? []).map((c) => ({ id: c.id, name: c.name }))} />
+          <UserInvitePanel courses={(courses.data ?? []).map((c) => ({ id: c.id, name: c.name, level: c.level }))} />
           <div className="surface-panel overflow-x-auto p-2">
             <Table>
               <TableHeader>
