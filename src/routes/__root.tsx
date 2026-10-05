@@ -159,9 +159,9 @@ const NAV = [
 ] as const;
 
 const STUDENT_NAV = [
-  { to: "/estudiantes/datos", label: "Datos", icon: UserRound },
-  { to: "/estudiantes/procesos", label: "Procesos de Matrícula", icon: FileCheck2 },
-  { to: "/estudiantes/movimientos", label: "Movimientos", icon: History },
+  { to: "/estudiantes/datos", label: "Ficha Estudiantil", icon: UserRound },
+  { to: "/estudiantes/procesos", label: "Test Fonoaudiología y Entrevista Apoderado", icon: FileCheck2 },
+  { to: "/estudiantes/movimientos", label: "Traslados", icon: History },
   { to: "/estudiantes/salud", label: "Salud Escolar", icon: ClipboardList },
 ] as const;
 
@@ -278,7 +278,7 @@ function StudentsMenu() {
           <ChevronDown className="size-3.5" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-64">
+      <DropdownMenuContent align="start" className="w-72">
         <DropdownMenuLabel>Registros de estudiantes</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {STUDENT_NAV.map(({ to, label, icon: Icon }) => (
