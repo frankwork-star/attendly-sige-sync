@@ -3,9 +3,9 @@ import { StudentRegistryView } from "@/components/StudentRegistryView";
 
 export const Route = createFileRoute("/estudiantes/movimientos")({
   head: () => ({ meta: [
-    { title: "Movimientos de estudiantes — Escuela Paihuen" },
+    { title: "Traslados — Escuela Paihuen" },
     { name: "description", content: "Historial de traslados, retiros y cambios de estudiantes." },
-    { property: "og:title", content: "Movimientos de estudiantes — Escuela Paihuen" },
+    { property: "og:title", content: "Traslados — Escuela Paihuen" },
     { property: "og:description", content: "Consulta de traslados, bajas y cambios registrados." },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
