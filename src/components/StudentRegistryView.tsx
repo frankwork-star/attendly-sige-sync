@@ -23,17 +23,17 @@ type RegistryKind = "datos" | "matricula" | "movimientos";
 
 const CONFIG = {
   datos: {
-    title: "Datos de estudiantes",
+    title: "Ficha Estudiantil",
     description: "Información personal básica y datos del apoderado.",
     icon: UserRound,
   },
   matricula: {
-    title: "Procesos de matrícula",
+    title: "Test Fonoaudiología y Entrevista Apoderado",
     description: "Test de fonoaudiología y entrevista a apoderados de cada estudiante.",
     icon: FileCheck2,
   },
   movimientos: {
-    title: "Movimientos",
+    title: "Traslados",
     description: "Historial y registro de traslados, bajas o cambios del estudiante.",
     icon: History,
   },
