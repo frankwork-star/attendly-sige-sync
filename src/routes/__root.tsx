@@ -234,6 +234,7 @@ function AppShell() {
               )}
             </div>
           </div>
+          {session && (
           <nav className="mt-3 flex flex-wrap gap-1">
             {nav.map(({ to, label, icon: Icon }, index) => (
               <div key={to} className="contents">
@@ -253,6 +254,7 @@ function AppShell() {
               </div>
             ))}
           </nav>
+          )}
         </div>
       </header>
       <main className="mx-auto max-w-7xl px-4 py-8">
