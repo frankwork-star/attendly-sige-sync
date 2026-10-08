@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { requireSession } from "@/lib/auth-guard";
 import { StudentRegistryView } from "@/components/StudentRegistryView";
 
 export const Route = createFileRoute("/estudiantes/procesos")({
+  beforeLoad: requireSession,
   head: () => ({ meta: [
     { title: "Test Fonoaudiología y Entrevista Apoderado — Escuela Paihuen" },
     { name: "description", content: "Test de fonoaudiología y entrevistas a apoderados del proceso de matrícula." },

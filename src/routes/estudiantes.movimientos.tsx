@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { requireSession } from "@/lib/auth-guard";
 import { StudentRegistryView } from "@/components/StudentRegistryView";
 
 export const Route = createFileRoute("/estudiantes/movimientos")({
+  beforeLoad: requireSession,
   head: () => ({ meta: [
     { title: "Traslados — Escuela Paihuen" },
     { name: "description", content: "Historial de traslados, retiros y cambios de estudiantes." },

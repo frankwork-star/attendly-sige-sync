@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { requireSession } from "@/lib/auth-guard";
 import { useQuery } from "@tanstack/react-query";
 import { Plus, Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -27,6 +28,7 @@ import {
 } from "@/components/ui/select";
 
 export const Route = createFileRoute("/estudiantes/")({
+  beforeLoad: requireSession,
   head: () => ({
     meta: [
       { title: "Matrícula y seguimiento de estudiantes — Escuela Paihuen" },
