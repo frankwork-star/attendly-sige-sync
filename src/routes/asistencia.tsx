@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { requireSession } from "@/lib/auth-guard";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckCircle2, CircleSlash, FileCheck2 } from "lucide-react";
 import { toast } from "sonner";
@@ -34,6 +35,7 @@ import {
 } from "@/components/ui/select";
 
 export const Route = createFileRoute("/asistencia")({
+  beforeLoad: requireSession,
   head: () => ({
     meta: [
       { title: "Asistencia diaria por curso — Escuela Paihuen" },

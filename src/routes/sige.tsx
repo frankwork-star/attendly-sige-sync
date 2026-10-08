@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { requireSession } from "@/lib/auth-guard";
 import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle, Download } from "lucide-react";
 import * as XLSX from "xlsx";
@@ -27,6 +28,7 @@ import {
 } from "@/components/ui/select";
 
 export const Route = createFileRoute("/sige")({
+  beforeLoad: requireSession,
   head: () => ({
     meta: [
       { title: "Revisión Pre-SIGE y exportación Excel — Escuela Paihuen" },

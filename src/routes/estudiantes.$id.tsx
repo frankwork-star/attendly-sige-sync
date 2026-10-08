@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { requireSession } from "@/lib/auth-guard";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { ArrowLeft, FileText, Upload } from "lucide-react";
@@ -22,6 +23,7 @@ import {
 } from "@/components/ui/select";
 
 export const Route = createFileRoute("/estudiantes/$id")({
+  beforeLoad: requireSession,
   head: () => ({
     meta: [
       { title: "Ficha del estudiante — Escuela Paihuen" },

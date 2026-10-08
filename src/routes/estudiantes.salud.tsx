@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { requireSession } from "@/lib/auth-guard";
 import { useQuery } from "@tanstack/react-query";
 import { Lock, Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { HealthPanel, ProtectedDataBadge } from "@/components/HealthPanel";
 
 export const Route = createFileRoute("/estudiantes/salud")({
+  beforeLoad: requireSession,
   head: () => ({
     meta: [
       { title: "Salud escolar y Ley 21.719 — Escuela Paihuen" },

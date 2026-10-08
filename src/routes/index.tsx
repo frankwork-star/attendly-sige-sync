@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { requireSession } from "@/lib/auth-guard";
 import { useQuery } from "@tanstack/react-query";
 import { CalendarCheck2, FileSpreadsheet, HeartPulse, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { ProtectedDataBadge } from "@/components/HealthPanel";
 
 export const Route = createFileRoute("/")({
+  beforeLoad: requireSession,
   head: () => ({
     meta: [
       { title: "Gestión Escolar Paihuen — Matrícula, salud y asistencia" },
