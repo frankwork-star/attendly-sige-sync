@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { LogIn, ShieldCheck, UserPlus } from "lucide-react";
 
@@ -61,11 +61,23 @@ function AuthPage() {
   }
 
   // Con sesión iniciada, siempre es el formulario de ingreso normal.
-  if (hasSession || usersExist.data !== false) {
+  if (hasSession) {
     return <LoginForm />;
   }
 
-  return <FirstAdminSetup />;
+  if (usersExist.isLoading) {
+    return (
+      <div className="mx-auto max-w-md py-16 text-center text-sm text-muted-foreground">
+        Cargando…
+      </div>
+    );
+  }
+
+  if (usersExist.data === false) {
+    return <FirstAdminSetup />;
+  }
+
+  return <LoginForm />;
 }
 
 function LoginForm() {
