@@ -33,13 +33,26 @@ export const Route = createFileRoute("/auth")({
 });
 
 function AuthPage() {
+  const [sessionChecked, setSessionChecked] = useState(false);
+  const [hasSession, setHasSession] = useState(false);
+
+  // Se comprueba una sola vez al cargar la página si hay sesión iniciada.
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setHasSession(Boolean(data.session));
+      setSessionChecked(true);
+    });
+  }, []);
+
   const usersExist = useQuery({
     queryKey: ["has-any-user"],
     queryFn: () => hasAnyUser(),
-    staleTime: 30_000,
+    staleTime: Infinity,
+    // Solo se pregunta a la base de datos si NO hay sesión iniciada.
+    enabled: sessionChecked && !hasSession,
   });
 
-  if (usersExist.isLoading) {
+  if (!sessionChecked) {
     return (
       <div className="mx-auto max-w-md py-16 text-center text-sm text-muted-foreground">
         Cargando…
@@ -47,11 +60,12 @@ function AuthPage() {
     );
   }
 
-  if (usersExist.data === false) {
-    return <FirstAdminSetup />;
+  // Con sesión iniciada, siempre es el formulario de ingreso normal.
+  if (hasSession || usersExist.data !== false) {
+    return <LoginForm />;
   }
 
-  return <LoginForm />;
+  return <FirstAdminSetup />;
 }
 
 function LoginForm() {
