@@ -197,7 +197,7 @@ function AppShell() {
           <div className="flex items-center justify-between gap-3">
             <Link to="/" className="flex items-center gap-3">
               <img
-                src={logoPaihuen.url}
+                src="/Logo_paihuen.jpg"
                 alt="Escuela de Lenguaje Paihuen"
                 className="size-16 rounded-xl object-contain"
               />
