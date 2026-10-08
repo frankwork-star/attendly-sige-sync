@@ -234,6 +234,7 @@ function AppShell() {
               )}
             </div>
           </div>
+          {session && (
           <nav className="mt-3 flex flex-wrap gap-1">
             {nav.map(({ to, label, icon: Icon }, index) => (
               <div key={to} className="contents">
